@@ -2,84 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>March Madness ? Cat Team Win Counter (2026)</title>
   <style>
     :root {
-      --bg: #0b0f17;
-      --panel: #141a24;
-      --accent: #ffc857;
-      --ok: #2ecc71;
-      --muted: #9fb0c3;
-      --text: #e9eef5;
-      --danger: #ff6b6b;
-      --link: #66d9ef;
+      --bg: #0b0f17; --panel: #141a24; --accent: #ffc857; --ok: #2ecc71;
+      --muted: #9fb0c3; --text: #e9eef5; --danger: #ff6b6b; --link: #66d9ef;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
       background: radial-gradient(1200px 600px at 20% 0%, #111a2b 0%, var(--bg) 50%);
       color: var(--text);
     }
-    header {
-      padding: 24px;
-      border-bottom: 1px solid #1e2633;
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,0));
-    }
-    h1 {
-      margin: 0 0 6px;
-      font-size: clamp(22px, 4vw, 32px);
-      letter-spacing: .2px;
-    }
+    header { padding: 24px; border-bottom: 1px solid #1e2633; background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,0)); }
+    h1 { margin: 0 0 6px; font-size: clamp(22px, 4vw, 32px); letter-spacing: .2px; }
     .sub { color: var(--muted); font-size: 14px; }
     .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
     .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: start; }
-    .card {
-      background: var(--panel);
-      border: 1px solid #1f2837;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
-    }
-    .kpi {
-      font-size: clamp(34px, 7vw, 56px);
-      color: var(--accent);
-      line-height: 1;
-      font-weight: 800;
-      margin: 8px 0;
-    }
-    .kpiRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } /* NEW */
+    .card { background: var(--panel); border: 1px solid #1f2837; border-radius: 16px; padding: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+    .kpi { font-size: clamp(34px, 7vw, 56px); color: var(--accent); line-height: 1; font-weight: 800; margin: 8px 0; }
+    .kpiRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .muted { color: var(--muted); }
     .row { display: flex; align-items: center; gap: 8px; }
-    .row > img.logo {
-      width: 22px; height: 22px; border-radius: 50%; background: #0e1420; object-fit: contain;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+    .btn {
+      appearance: none; border: 1px solid #2a3b54; background: #0f1a2a; color: #cfe7ff;
+      padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600;
     }
+    .btn:hover { background: #122135; }
+    .logo { width: 22px; height: 22px; border-radius: 50%; background: #0e1420; object-fit: contain; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
     .list { display: grid; gap: 8px; }
     .teamline {
-      display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center;
+      display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center;
       padding: 8px 10px; border-radius: 12px; background: #0f1622; border: 1px solid #1b2433;
     }
-    .pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 8px; border-radius: 999px;
-      background: #0e1928; border: 1px solid #1c2a3d; color: var(--muted); font-size: 12px;
-    }
-    code, pre { background: #0f1622; color: #cfe7ff; padding: 2px 6px; border-radius: 6px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px;
+      background: #0e1928; border: 1px solid #1c2a3d; color: var(--muted); font-size: 12px; }
+    code { background: #0f1622; color: #cfe7ff; padding: 2px 6px; border-radius: 6px; }
     a { color: var(--link); text-decoration: none; }
     .ok { color: var(--ok); }
     .warn { color: var(--danger); }
     footer { color: var(--muted); font-size: 12px; padding: 14px 24px 30px; text-align: center; }
-    .spinner {
-      width: 14px; height: 14px; border: 2px solid #3b4a62; border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.9s linear infinite;
-    }
+    .spinner { width: 14px; height: 14px; border: 2px solid #3b4a62; border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.9s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .keywords { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .match { display: flex; align-items: center; gap: 8px; }
+    .vs { color: var(--muted); }
   </style>
 </head>
 <body>
@@ -87,20 +57,19 @@
     <div class="wrap">
       <h1>Cat Team Win Counter ? March Madness 2026</h1>
       <div class="sub">
-        Live tally of NCAA Men?s Tournament wins by teams with cat mascots / names. Auto-refreshes today?s games every 30s.
+        Live tally of NCAA Men?s Tournament wins by teams with cat mascots / names. Manual refresh only?no auto update.
       </div>
     </div>
   </header>
 
   <main class="wrap">
     <div class="grid">
+      <!-- KPIs -->
       <section class="card">
         <div class="row" style="justify-content: space-between;">
           <div style="width:100%;">
             <div class="muted">Cat-team wins (since Mar 17)</div>
             <div id="totalWins" class="kpi">?</div>
-
-            <!-- NEW KPI row -->
             <div class="kpiRow">
               <div>
                 <div class="muted">Total games (final)</div>
@@ -111,10 +80,12 @@
                 <div id="catPct" class="kpi" style="font-size:32px;">?</div>
               </div>
             </div>
-
             <div class="muted" id="lastUpdated" style="margin-top:8px;">Fetching?</div>
           </div>
-          <div class="row"><div class="spinner" id="spinner" aria-hidden="true"></div></div>
+          <div class="row">
+            <button id="btnRefresh" class="btn" type="button">Refresh now</button>
+            <div class="spinner" id="spinner" aria-hidden="true" style="margin-left:8px;"></div>
+          </div>
         </div>
         <div style="margin-top:12px" class="muted">
           Counting winners whose team nickname matches these patterns:
@@ -122,6 +93,7 @@
         </div>
       </section>
 
+      <!-- Wins by team -->
       <section class="card">
         <div class="row" style="justify-content: space-between;">
           <div class="muted">Wins by team</div>
@@ -130,15 +102,28 @@
         <div class="list" id="teamList" style="margin-top:10px;"></div>
       </section>
 
+      <!-- Live status (today only) -->
       <section class="card">
-        <div class="muted" style="margin-bottom:8px;">Live status</div>
+        <div class="row" style="justify-content: space-between;">
+          <div class="muted">Live status (today)</div>
+          <button id="btnRefresh2" class="btn" type="button">Refresh now</button>
+        </div>
         <div class="list" id="statusList">
           <div class="muted">Waiting for first update?</div>
         </div>
         <div class="muted" style="margin-top:10px;">
           Data from ESPN scoreboard (group 100 = NCAA tournament). If CORS blocks direct requests,
-          this page transparently uses <code>api.allorigins.win</code>. You can point to your own proxy in <code>PROXY</code>.
+          you can point to a proxy in <code>PROXY</code>.
         </div>
+      </section>
+
+      <!-- Cat wins ? scores & rounds -->
+      <section class="card">
+        <div class="row" style="justify-content: space-between;">
+          <div class="muted">Cat wins ? scores & rounds</div>
+          <div class="pill"><span id="catWinsCount">0</span> games</div>
+        </div>
+        <div class="list" id="catWinsList" style="margin-top:10px;"></div>
       </section>
     </div>
   </main>
@@ -149,12 +134,11 @@
 
   <script>
     // ======= Configuration =======
-    const FIRST_FOUR_YYYYMMDD = "20260317"; // Mar 17, 2026
-    const POLL_MS = 30_000;                 // refresh "today" every 30s
+    const FIRST_FOUR_YYYYMMDD = "20260317";  // Mar 17, 2026 (First Four)
     const ESPN_BASE =
       "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard";
     const ESPN_QUERY = "groups=100&limit=200"; // NCAA tournament scope
-    const PROXY = ""; // e.g., "https://api.allorigins.win/raw?url="
+    const PROXY = ""; // e.g., "https://api.allorigins.win/raw?url=" (leave "" to fetch direct)
 
     // Cat-like nicknames / names ? tweak as you like
     const CAT_PATTERNS = [
@@ -167,17 +151,23 @@
     document.getElementById("keywords").innerHTML = CAT_PATTERNS
       .map(rx => `<span class="pill">${rx.toString().slice(1,-2)}</span>`).join("");
 
+    // DOM
     const elTotalWins = document.getElementById("totalWins");
-    const elTotalGames = document.getElementById("totalGames");   // NEW
-    const elCatPct     = document.getElementById("catPct");       // NEW
+    const elTotalGames = document.getElementById("totalGames");
+    const elCatPct     = document.getElementById("catPct");
     const elTeamList   = document.getElementById("teamList");
     const elTeamCount  = document.getElementById("teamCount");
     const elStatus     = document.getElementById("statusList");
     const elUpdated    = document.getElementById("lastUpdated");
     const elSpinner    = document.getElementById("spinner");
+    const elCatWinsList = document.getElementById("catWinsList");
+    const elCatWinsCount = document.getElementById("catWinsCount");
+    const btnRefresh = document.getElementById("btnRefresh");
+    const btnRefresh2 = document.getElementById("btnRefresh2");
 
     const fmt = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
 
+    // Helpers
     function yyyymmdd(d) {
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -215,13 +205,11 @@
     }
 
     function isFinal(evOrStatus) {
-      // Works with event or competitions[0] structure
       const st = evOrStatus?.status || evOrStatus;
       const state = st?.type?.state;
       return state === "post";
     }
 
-    // Count finals in a list of events  // NEW
     function totalFinals(events) {
       return (events || []).reduce((acc, ev) => {
         const comp = ev?.competitions?.[0];
@@ -229,23 +217,59 @@
       }, 0);
     }
 
-    // Build map of cat-team wins in these events
+    // Map of cat-team wins (teamId -> {wins, name, logo})
     function catWinsFromEvents(events) {
       const wins = new Map();
       for (const ev of (events || [])) {
         const comp = (ev.competitions && ev.competitions[0]) || null;
-        if (!isFinal(comp || ev)) continue; // only finals are wins
+        if (!isFinal(comp || ev)) continue;
         const winner = (comp?.competitors || []).find(c => c.winner === true);
         if (!winner) continue;
         const t = winner.team;
-        if (!t) continue;
-        if (!isCatTeam(t)) continue;
-
+        if (!t || !isCatTeam(t)) continue;
         const prior = wins.get(t.id) || { wins: 0, name: t.displayName || t.name, logo: t.logo || "" };
         prior.wins += 1;
         wins.set(t.id, prior);
       }
       return wins;
+    }
+
+    // Per-game details for cat wins (for list)
+    function getRoundName(ev) {
+      // Example headline: "NCAA Men's Basketball Championship - West Region - 1st Round"
+      const headline = ev?.notes?.find(n => n.type === "event")?.headline || "";
+      if (!headline) return "Tournament";
+      const parts = headline.split(" - ");
+      const last = (parts[parts.length - 1] || "").trim();
+      return last || "Tournament";
+    }
+
+    function extractCatWinGames(events) {
+      const out = new Map(); // eventId -> record
+      for (const ev of (events || [])) {
+        const comp = ev?.competitions?.[0];
+        if (!isFinal(comp || ev)) continue;
+        const competitors = comp?.competitors || [];
+        const winner = competitors.find(c => c.winner === true);
+        const loser  = competitors.find(c => c.winner !== true);
+        if (!winner || !loser) continue;
+        const wt = winner.team || {}, lt = loser.team || {};
+        if (!isCatTeam(wt)) continue;
+
+        const rec = {
+          id: ev.id,
+          date: ev.date,
+          round: getRoundName(ev),
+          winnerShort: wt.shortDisplayName || wt.displayName || wt.name,
+          winnerScore: Number(winner.score ?? 0),
+          winnerLogo: wt.logo || "",
+          loserShort: lt.shortDisplayName || lt.displayName || lt.name,
+          loserScore: Number(loser.score ?? 0),
+          loserLogo: lt.logo || ""
+        };
+        out.set(ev.id, rec);
+      }
+      return out;
     }
 
     function mergeWins(mapA, mapB) {
@@ -259,7 +283,11 @@
       }
       return out;
     }
-
+    function mergeCatWinGames(mapA, mapB) {
+      const out = new Map(mapA);
+      for (const [id, rec] of mapB) out.set(id, rec);
+      return out;
+    }
     function sumWins(map) {
       let s = 0;
       for (const { wins } of map.values()) s += wins;
@@ -271,22 +299,21 @@
         `<div class="muted">No games found for today yet.</div>`;
     }
 
-    function renderWinsAndKPIs(teamMap, totalGamesFinal) {  // NEW: render total games & pct
+    function renderWinsAndKPIs(teamMap, totalGamesFinal) {
       const entries = [...teamMap.entries()]
         .sort((a, b) => b[1].wins - a[1].wins || a[1].name.localeCompare(b[1].name));
-
       const catWinsTotal = sumWins(teamMap);
       const pct = (totalGamesFinal > 0) ? (catWinsTotal / totalGamesFinal * 100) : 0;
 
       elTeamCount.textContent = entries.length;
       elTotalWins.textContent = catWinsTotal;
-      elTotalGames.textContent = totalGamesFinal;                // NEW
-      elCatPct.textContent = `${pct.toFixed(1)}%`;               // NEW
+      elTotalGames.textContent = totalGamesFinal;
+      elCatPct.textContent = `${pct.toFixed(1)}%`;
 
       elTeamList.innerHTML = entries.map(([id, rec]) => `
         <div class="teamline">
-          <div class="row">
-            ${rec.logo ? `${rec.logo}` : ""}
+          <div class="match">
+            ${rec.logo ? `<img class="logo" src="${rec.logo}" alt="">` : ""}
             <div>${rec.name}</div>
           </div>
           <div></div>
@@ -297,7 +324,25 @@
       elUpdated.textContent = `Last updated ${fmt.format(new Date())}`;
     }
 
-    // ---- Main flow ----
+    function renderCatWinGamesList(recMap) {
+      const items = [...recMap.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+      elCatWinsCount.textContent = items.length;
+      elCatWinsList.innerHTML = items.map(g => `
+        <div class="teamline">
+          <div class="match">
+            ${g.winnerLogo ? `<img class="logo" src="${g.winnerLogo}" alt="">` : ""}
+            <strong>${g.winnerShort}</strong>
+            <span class="vs">def.</span>
+            ${g.loserLogo ? `<img class="logo" src="${g.loserLogo}" alt="">` : ""}
+            <span>${g.loserShort}</span>
+          </div>
+          <div class="pill">${g.round}</div>
+          <div class="pill"><strong>${g.winnerScore}-${g.loserScore}</strong></div>
+        </div>
+      `).join("") || `<div class="muted">No cat-team wins yet.</div>`;
+    }
+
+    // ---- Main flow (manual refresh only) ----
     (async function main() {
       try {
         elSpinner.style.visibility = "visible";
@@ -305,20 +350,24 @@
         const start = FIRST_FOUR_YYYYMMDD;
         const pastDays = dateRange(start, today).filter(d => d < today);
 
-        // 1) Bootstrap with historical days (First Four -> yesterday)
-        let baselineMap = new Map();
-        let baselineFinals = 0; // NEW
+        // Accumulators for history (First Four -> yesterday)
+        let baselineWinsByTeam = new Map();
+        let baselineFinals = 0;
+        let baselineCatWinGames = new Map();
+
         const statusLines = [];
 
+        // Load historical days once
         for (const d of pastDays) {
           try {
             const data = await fetchScoreboard(d);
             const events = data.events || [];
-            const dayWins = catWinsFromEvents(events);
-            baselineMap = mergeWins(baselineMap, dayWins);
 
-            const finalsCount = totalFinals(events);            // NEW
-            baselineFinals += finalsCount;                      // NEW
+            baselineWinsByTeam = mergeWins(baselineWinsByTeam, catWinsFromEvents(events));
+            const finalsCount = totalFinals(events);
+            baselineFinals += finalsCount;
+            baselineCatWinGames = mergeCatWinGames(baselineCatWinGames, extractCatWinGames(events));
+
             statusLines.push(`<div class="muted">Finals on ${d.slice(4,6)}/${d.slice(6)}: ${finalsCount}</div>`);
           } catch (e) {
             statusLines.push(`<div class="warn">Failed to load ${d}: ${e.message}</div>`);
@@ -326,23 +375,21 @@
         }
 
         renderStatus(statusLines);
-        // provisional render (today not included yet)
-        renderWinsAndKPIs(baselineMap, baselineFinals);         // NEW
+        renderWinsAndKPIs(baselineWinsByTeam, baselineFinals);
+        renderCatWinGamesList(baselineCatWinGames);
 
-        // 2) Live loop for today
+        // Today's refresh function (manual)
         async function refreshToday() {
           try {
             elSpinner.style.visibility = "visible";
-            const data = await fetchScoreboard(today);
+            const todayStr = yyyymmdd(new Date());
+            const data = await fetchScoreboard(todayStr);
             const events = data.events || [];
 
-            // Live status lines (only games that include a cat team)
+            // Live status (only games involving a cat team)
             const lines = [];
-            const todayWins = catWinsFromEvents(events);
-            const todayFinals = totalFinals(events);            // NEW
-
             for (const ev of events) {
-              const comp = (ev.competitions && ev.competitions[0]) || null;
+              const comp = ev?.competitions?.[0];
               const competitors = comp?.competitors || [];
               const hasCatTeam = competitors.some(c => isCatTeam(c.team||{}));
               if (!hasCatTeam) continue;
@@ -356,10 +403,7 @@
                 const isCat = isCatTeam(c.team||{});
                 const nm = c.team?.shortDisplayName || c.team?.displayName || c.team?.name;
                 const score = c.score != null ? Number(c.score) : null;
-                return `
-                  <span class="${isCat ? 'ok' : ''}">
-                    ${nm}${score!=null ? ` <strong>${score}</strong>` : ""}
-                  </span>`;
+                return `<span class="${isCat ? 'ok' : ''}">${nm}${score!=null ? ` <strong>${score}</strong>` : ""}</span>`;
               }
               lines.push(`
                 <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;width:100%;">
@@ -371,10 +415,16 @@
             }
             renderStatus(lines);
 
-            // Combine baseline + today's numbers and render KPIs
-            const combinedWins = mergeWins(baselineMap, todayWins);
-            const combinedFinals = baselineFinals + todayFinals;    // NEW
-            renderWinsAndKPIs(combinedWins, combinedFinals);        // NEW
+            // Combine KPIs and lists (baseline + today's results so far)
+            const todayWinsByTeam = catWinsFromEvents(events);
+            const todayFinals = totalFinals(events);
+            const combinedWins = mergeWins(baselineWinsByTeam, todayWinsByTeam);
+            const combinedFinals = baselineFinals + todayFinals;
+            renderWinsAndKPIs(combinedWins, combinedFinals);
+
+            const todayCatWinGames = extractCatWinGames(events);
+            const combinedCatWinGames = mergeCatWinGames(baselineCatWinGames, todayCatWinGames);
+            renderCatWinGamesList(combinedCatWinGames);
           } catch (e) {
             renderStatus([`<div class="warn">Today refresh failed: ${e.message}</div>`]);
           } finally {
@@ -382,8 +432,14 @@
           }
         }
 
+        // Initial one-time fetch for today
         await refreshToday();
-        setInterval(refreshToday, POLL_MS);
+
+        // Hook up the manual refresh buttons
+        btnRefresh.addEventListener("click", refreshToday);
+        btnRefresh2.addEventListener("click", refreshToday);
+
+        // NOTE: Auto-refresh removed (no setInterval)
       } catch (e) {
         elUpdated.textContent = `Load failed: ${e.message}`;
         elSpinner.style.visibility = "hidden";
