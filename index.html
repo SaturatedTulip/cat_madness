@@ -3,78 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Madness Tournament</title>
-    <script>
-        // Caching functions
-        const getCacheKey = () => 'tournament_cache';
-        const isCacheValid = (timestamp) => {
-            const expirationTime = 24 * 60 * 60 * 1000; // 24 hours
-            return (Date.now() - timestamp) < expirationTime;
-        };
-
-        const saveToCache = (data) => {
-            localStorage.setItem(getCacheKey(), JSON.stringify(data));
-            localStorage.setItem(`${getCacheKey()}_timestamp`, Date.now());
-        };
-
-        const loadFromCache = () => {
-            const cachedData = JSON.parse(localStorage.getItem(getCacheKey()));
-            const timestamp = localStorage.getItem(`${getCacheKey()}_timestamp`);
-            return isCacheValid(parseInt(timestamp)) ? cachedData : null;
-        };
-
-        const clearExpiredCache = () => {
-            const timestamp = localStorage.getItem(`${getCacheKey()}_timestamp`);
-            if (timestamp && !isCacheValid(parseInt(timestamp))) {
-                localStorage.removeItem(getCacheKey());
-                localStorage.removeItem(`${getCacheKey()}_timestamp`);
-            }
-        };
-
-        const clearAllCache = () => {
-            localStorage.removeItem(getCacheKey());
-            localStorage.removeItem(`${getCacheKey()}_timestamp`);
-        };
-
-        const loadTournamentData = async () => {
-            clearExpiredCache();  // Clear expired cache
-            let data = loadFromCache();  // Load data from cache
-
-            if (!data) {
-                // Fetch data from API
-                const response = await fetch('API_ENDPOINT_HERE');  // replace with actual API endpoint
-                data = await response.json();
-                saveToCache(data);  // Save fetched data to cache
-            }
-
-            // Process the tournament data
-            processTournamentData(data);
-        };
-
-        const processTournamentData = (data) => {
-            // Logic to update UI with tournament data
-        };
-
-        const setupClearCacheButton = () => {
-            const button = document.createElement('button');
-            button.innerText = 'Clear Cache';
-            button.onclick = () => {
-                clearAllCache();
-                alert('Cache cleared!');
-            };
-            document.body.appendChild(button);
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setupClearCacheButton();
-            loadTournamentData();
-        });
-    </script>
+    <title>ESPN March Madness Cat Team Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #cacheButton { margin: 10px; }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Cat Madness Tournament!</h1>
-    <div id="tournament-data">
-        <!-- Tournament data will be loaded here -->
-    </div>
+    <h1>ESPN March Madness Cat Team Tracker</h1>
+    <button id="cacheButton">Clear Cache</button>
+    <div id="teams"></div>
+
+    <script>
+        // Cache functions
+        const CACHE_KEY = 'marchMadnessCatTeams';
+        const CACHE_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours
+
+        function getCacheKey() {
+            return CACHE_KEY;
+        }
+
+        function isCacheValid(timestamp) {
+            return (new Date().getTime() - timestamp) < CACHE_EXPIRATION;
+        }
+
+        function saveToCache(data) {
+            const timestamp = new Date().getTime();
+            localStorage.setItem(getCacheKey(), JSON.stringify({ data, timestamp }));
+        }
+
+        function loadFromCache() {
+            const cached = JSON.parse(localStorage.getItem(getCacheKey()));
+            if (cached && isCacheValid(cached.timestamp)) {
+                return cached.data;
+            }
+            return null;
+        }
+
+        function clearExpiredCache() {
+            const cached = JSON.parse(localStorage.getItem(getCacheKey()));
+            if (cached && !isCacheValid(cached.timestamp)) {
+                localStorage.removeItem(getCacheKey());
+            }
+        }
+
+        function clearAllCache() {
+            localStorage.removeItem(getCacheKey());
+        }
+
+        // Function to load teams
+        async function loadTeams() {
+            clearExpiredCache();
+            const cachedTeams = loadFromCache();
+
+            if (cachedTeams) {
+                // Use the cached teams
+                displayTeams(cachedTeams);
+            } else {
+                const response = await fetch('https://api.espn.com/v1/sports/basketball/ncaam/teams');
+                const teams = await response.json();
+                saveToCache(teams);
+                displayTeams(teams);
+            }
+        }
+
+        function displayTeams(teams) {
+            const teamsDiv = document.getElementById('teams');
+            teamsDiv.innerHTML = '';
+            teams.forEach(team => {
+                const teamDiv = document.createElement('div');
+                teamDiv.textContent = team.name;
+                teamsDiv.appendChild(teamDiv);
+            });
+        }
+
+        // Clear cache button functionality
+        document.getElementById('cacheButton').addEventListener('click', () => {
+            clearAllCache();
+            alert('Cache cleared!');
+        });
+
+        // Initial call to load teams
+        loadTeams();
+    </script>
 </body>
 </html>
