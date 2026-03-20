@@ -313,37 +313,64 @@
 
 // Per-game details for cat wins (for list)
 function getRoundName(ev) {
-  // Method 1: Use ESPN's structured round ID (most reliable)
   const comp = ev?.competitions?.[0];
-  if (comp?.status?.type?.id) {
-    const roundId = comp.status.type.id;
-    const roundMap = {
-      "1": "First Four",
-      "2": "1st Round",
-      "3": "2nd Round",
-      "4": "Sweet 16",
-      "5": "Elite 8",
-      "6": "Final Four",
-      "7": "Championship"
-    };
-    if (roundMap[roundId]) return roundMap[roundId];
+
+  // 1) Prefer explicit round metadata if available
+  const rn = comp?.round;
+  if (rn) {
+    // Some feeds provide a canonical round name
+    if (typeof rn.name === "string" && rn.name.trim()) {
+      return normalizeRoundName(rn.name);
+    }
+    // Others only provide a numeric round index
+    if (typeof rn.number === "number") {
+      const mapByNum = {
+        0: "First Four",   // some feeds use 0 for play-in
+        1: "1st Round",
+        2: "2nd Round",
+        3: "Sweet 16",
+        4: "Elite 8",
+        5: "Final Four",
+        6: "Championship"
+      };
+      if (mapByNum[rn.number] != null) return mapByNum[rn.number];
+    }
   }
-  
-  // Fallback: Check event notes headline for keywords
-  const headline = ev?.notes?.find(n => n.type === "event")?.headline || "";
-  if (headline) {
-    if (headline.includes("First Four")) return "First Four";
-    if (headline.includes("Championship")) return "Championship";
-    if (headline.includes("Final Four")) return "Final Four";
-    if (headline.includes("Elite Eight")) return "Elite 8";
-    if (headline.includes("Sweet Sixteen")) return "Sweet 16";
-    if (headline.includes("Second Round")) return "2nd Round";
-    if (headline.includes("First Round")) return "1st Round";
-  }
-  
-  // Default fallback
+
+  // 2) Fallback: infer from event/competition text
+  const haystack = [
+    ev?.name,
+    comp?.name,
+    comp?.summary,
+    ev?.shortName,
+    ev?.notes?.find(n => n.type === "event")?.headline
+  ].filter(Boolean).join(" | ").toLowerCase();
+
+  if (haystack.includes("first four")) return "First Four";
+  if (haystack.includes("championship")) return "Championship";
+  if (haystack.includes("final four")) return "Final Four";
+  if (haystack.includes("elite eight") || haystack.includes("elite 8")) return "Elite 8";
+  if (haystack.includes("sweet sixteen") || haystack.includes("sweet 16")) return "Sweet 16";
+  if (haystack.includes("second round") || haystack.includes("2nd round")) return "2nd Round";
+  if (haystack.includes("first round") || haystack.includes("1st round")) return "1st Round";
+
+  // 3) Last resort
   return "Tournament";
+
+  // --- helpers ---
+  function normalizeRoundName(s) {
+    const t = s.toLowerCase();
+    if (t.includes("first four")) return "First Four";
+    if (t.includes("championship")) return "Championship";
+    if (t.includes("final four")) return "Final Four";
+    if (t.includes("elite eight") || t.includes("elite 8")) return "Elite 8";
+    if (t.includes("sweet sixteen") || t.includes("sweet 16")) return "Sweet 16";
+    if (t.includes("second round") || t.includes("round of 32")) return "2nd Round";
+    if (t.includes("first round") || t.includes("round of 64")) return "1st Round";
+    return s.trim();
+  }
 }
+
 
     function extractCatWinGames(events) {
       const out = new Map(); // eventId → record
